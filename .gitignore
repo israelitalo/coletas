@@ -38,7 +38,7 @@ bower_components
 build/Release
 
 # Database
-src/database/database.sqlite
+src/database/*.sqlite
 
 # Dependency directories
 node_modules/
