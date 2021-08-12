@@ -1,4 +1,4 @@
-# node-mustache
+# node-express-knex-sqlite
 
 Projeto com node js
 
