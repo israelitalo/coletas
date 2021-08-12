@@ -37,6 +37,9 @@ bower_components
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
 
+# Database
+src/database/database.sqlite
+
 # Dependency directories
 node_modules/
 jspm_packages/
