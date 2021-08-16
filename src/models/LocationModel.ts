@@ -9,6 +9,18 @@ export default class LocationModel {
         return locations;
     }
 
+    public async getWithFilter(city: string, uf: string, parsedItems: number[]) {
+        const list = await knex('locations')
+            .join('locations_items', 'locations.id', '=', 'locations_items.location_id')
+            .whereIn('locations_items.item_id', parsedItems)
+            .where('city', String(city))
+            .where('uf', String(uf))
+            .distinct()
+            .select('locations.*');
+
+        return list;
+    }
+
     public async create(location: ILocation, items: IItems[]) {
         const transaction = await knex.transaction();
 
@@ -57,5 +69,21 @@ export default class LocationModel {
             ...location,
             id
         };
+    }
+
+    public async update(id: string, image: string) {
+        let location = await knex('locations').where({ id }).first();
+
+        if (!location) {
+            return { message: 'Location não cadastrada' };
+        }
+
+        await knex('locations')
+            .update({ ...location, image })
+            .where({ id });
+
+        location.image = image;
+
+        return location;
     }
 }
