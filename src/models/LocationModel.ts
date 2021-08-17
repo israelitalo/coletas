@@ -1,6 +1,8 @@
 import knex from '../database/connection';
 import IItems from '../interfaces/items';
 import ILocation from '../interfaces/location';
+import path from 'path';
+import fs from 'fs';
 
 export default class LocationModel {
     public async getAll() {
@@ -74,15 +76,28 @@ export default class LocationModel {
     public async update(id: string, image: string) {
         let location = await knex('locations').where({ id }).first();
 
-        if (!location) {
-            return { message: 'Location não cadastrada' };
-        }
-
         await knex('locations')
             .update({ ...location, image })
             .where({ id });
 
-        location.image = image;
+        if (location.image === 'defaul.png') {
+            location.image = image;
+
+            return location;
+        }
+
+        const filePath = path.join(__dirname, '..', '..', 'uploads', location.image);
+
+        try {
+            await fs.promises.unlink(filePath);
+            return { ...location, image };
+        } catch (error) {
+            return error;
+        }
+    }
+
+    public async findOneById(id: string) {
+        const location = await knex('locations').where({ id }).first();
 
         return location;
     }
